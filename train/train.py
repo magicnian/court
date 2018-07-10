@@ -1,6 +1,7 @@
 import numpy as np
 import os
 import cv2
+import tensorflow as tf
 
 from keras.preprocessing import image
 from keras.models import Model
@@ -8,6 +9,10 @@ from keras.layers import Dense, Dropout, Flatten, Input, concatenate
 from keras.layers.convolutional import Conv2D, Convolution2D, MaxPooling2D
 from keras.callbacks import ModelCheckpoint
 from keras.optimizers import Adadelta
+
+config = tf.ConfigProto()
+config.gpu_options.allow_growth = True
+session = tf.Session(config=config)
 
 captcha_word = "0123456789abcdefghijklmnopqrstuvwxyz"
 
@@ -55,7 +60,7 @@ vec_test = vec_to_captcha(test_vec)
 print(test_vec)
 print(vec_test)
 
-train_dir = 'E:\\document\\ocr\\court\\shixing\\dst'
+train_dir = 'H:\\document\\ocr\\dst'
 
 image_list = []
 
@@ -74,7 +79,7 @@ for i, img in enumerate(image_list):
     img_path = os.path.join(train_dir, img)
     img_array = cv2.imread(img_path, flags=cv2.IMREAD_GRAYSCALE)
     X[i] = img_array.reshape((height, width, 1))
-    result = img.split('.')[0]
+    result = img.split('-')[0]
     y[i] = captcha_to_vec(result)
 
 # 创建输入，结构为 高，宽，通道
@@ -119,7 +124,7 @@ model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy
 checkpointer = ModelCheckpoint(filepath="output/model.{epoch:02d}--{val_loss:.2f}-{val_acc:.4f}.hdf5",
                                verbose=2, save_weights_only=False)
 
-model.fit(X, y, epochs=1, callbacks=[checkpointer], validation_split=0.01)
+model.fit(X, y, batch_size=128, epochs=100, callbacks=[checkpointer], validation_split=0.01)
 
 # 保存权重和模型
 model.save_weights('output/captcha_model_weights.hdf5')

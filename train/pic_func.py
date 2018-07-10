@@ -1,8 +1,8 @@
 import cv2
 import os
 
-src_dir = 'E:\\document\\ocr\\court\\shixing\\source'
-dst_dir = 'E:\\document\\ocr\\court\\shixing\\dst'
+src_dir = 'H:\\document\\ocr\\src\\shixin2'
+dst_dir = 'H:\\document\\ocr\\dst-test'
 
 files = os.listdir(src_dir)
 
