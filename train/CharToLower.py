@@ -1,6 +1,6 @@
 import os
 
-img_dir = 'H:\\document\\ocr\\dst'
+img_dir = 'E:\\document\\ocr\\court\\zhixing\\dst'
 
 
 def transfer():
@@ -38,6 +38,6 @@ def delete_error():
                 continue
 
 if __name__ == '__main__':
-    # transfer()
+    transfer()
     # remove_useless()
-    delete_error()
+    # delete_error()

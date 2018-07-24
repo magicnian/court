@@ -47,25 +47,40 @@ def vec_to_captcha(vec):
 
 
 def verify():
-    CAPTCHA_PATH = 'D:\\document\\ocr\\test-dst'
-    model = load_model('output/model.50--6.40-0.8785.hdf5')
+    CAPTCHA_PATH = 'E:\\pythonworkspace\\court\\server\\static\\uploads'
+    model = load_model('output/captcha__model.hdf5')
 
     imgs = os.listdir(CAPTCHA_PATH)
-    for name in imgs:
-        X_test = np.zeros((1, height, width, 1), dtype=np.float32)
+    X_test = np.zeros((len(imgs), height, width, 1), dtype=np.float32)
+    True_test = []
+    for i, name in enumerate(imgs):
         img_path = os.path.join(CAPTCHA_PATH, name)
         img_array = cv2.imread(img_path, flags=cv2.IMREAD_GRAYSCALE)
-        X_test[0] = img_array.reshape((height, width, 1))
+        X_test[i] = img_array.reshape((height, width, 1))
 
-        result = model.predict(X_test)
-
-        vex_test = vec_to_captcha(result[0])
+        # result = model.predict(X_test)
+        #
+        # vex_test = vec_to_captcha(result[0])
         true_test = vec_to_captcha(captcha_to_vec(name.split('.')[0]))
+        True_test.append(true_test)
 
-        plt.imshow(img_array)
-        plt.show()
+        # plt.imshow(img_array)
+        # plt.show()
+        #
+        # print('原始', true_test, '预测', vex_test)
 
-        print('原始', true_test, '预测', vex_test)
+    total_num = len(imgs)
+
+    predict_right_num = 0
+    predict_result = model.predict(X_test)
+    for i, true_predict in enumerate(True_test):
+        predict_result_name = vec_to_captcha(predict_result[i])
+        print('原始', true_predict, '预测', predict_result_name)
+        if true_predict == predict_result_name:
+            predict_right_num += 1
+
+    print('预测成功率：%.2f%%' % ((predict_right_num / total_num) * 100))
+
 
 if __name__ == '__main__':
     verify()

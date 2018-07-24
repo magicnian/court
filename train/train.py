@@ -10,9 +10,9 @@ from keras.layers.convolutional import Conv2D, Convolution2D, MaxPooling2D
 from keras.callbacks import ModelCheckpoint
 from keras.optimizers import Adadelta
 
-config = tf.ConfigProto()
-config.gpu_options.allow_growth = True
-session = tf.Session(config=config)
+# config = tf.ConfigProto()
+# config.gpu_options.allow_growth = True
+# session = tf.Session(config=config)
 
 captcha_word = "0123456789abcdefghijklmnopqrstuvwxyz"
 
